@@ -7,7 +7,7 @@ public class Player {
 
     String name;
     private double moneyInWallet;
-    List<Card> hand = new ArrayList<Card>();
+    public List<Card> hand = new ArrayList<Card>();
 
 
     public Player(){

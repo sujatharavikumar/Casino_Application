@@ -23,7 +23,7 @@ public class BlackJack {
         System.out.println();
         Display.displayDealerHand();
         dealer.displayHand(dealer);
-        if(doesPlayerHaveAnotherTurn()){
+        if(doesPlayerHaveAnotherTurn(blackJackPlayer)){
             hitOrStand();
             Display.displayPlayerHand();
             blackJackPlayer.displayHand(blackJackPlayer);
@@ -71,7 +71,7 @@ public class BlackJack {
                 Display.displayPlayerHand();
                 blackJackPlayer.displayHand(blackJackPlayer);
                 System.out.println();
-                checkIfPlayerHasAnotherTurn = doesPlayerHaveAnotherTurn();
+                checkIfPlayerHasAnotherTurn = doesPlayerHaveAnotherTurn(blackJackPlayer);
                 if(checkIfPlayerHasAnotherTurn)
                     hitOrStand();
                 break;
@@ -81,7 +81,7 @@ public class BlackJack {
                 blackJackPlayer.displayHand(blackJackPlayer);
                 Display.displayDealerHand();
                 dealer.displayHand(dealer);
-                doesDealerHaveAnotherTurn();
+                doesDealerHaveAnotherTurn(dealer);
                 break;
             default:
                 System.out.println("Enter S or H");
@@ -134,8 +134,8 @@ public class BlackJack {
     }
 
 
-    public boolean doesPlayerHaveAnotherTurn(){
-        int totalHandValue = getTotalHandValue(blackJackPlayer);
+    public boolean doesPlayerHaveAnotherTurn(Player player){
+        int totalHandValue = getTotalHandValue(player);
         if (totalHandValue == 21) {
             playerTurn = false;
             System.out.println("Player Wins!!!");
@@ -144,7 +144,7 @@ public class BlackJack {
         else if(totalHandValue > 21) {
             playerTurn = false;
             System.out.println("Busted");
-            blackJackPlayer.printMoneyInWallet();
+            player.printMoneyInWallet();
             return playerTurn;
         }
         else {
@@ -154,8 +154,8 @@ public class BlackJack {
     }
 
 
-    public boolean doesDealerHaveAnotherTurn(){
-        int totalHandValue = getTotalHandValue(dealer);
+    public boolean doesDealerHaveAnotherTurn(Player player){
+        int totalHandValue = getTotalHandValue(player);
         if (totalHandValue == 21) {
             dealerTurn = false;
             System.out.println("\nDealer wins!!");
@@ -173,8 +173,8 @@ public class BlackJack {
             System.out.println("\nDealer wants a HIT...");
             dealer.addCardToHand(deck.dealCard());
             Display.displayDealerHand();
-            dealer.displayHand(dealer);
-            doesDealerHaveAnotherTurn();
+            dealer.displayHand(player);
+            doesDealerHaveAnotherTurn(player);
             return dealerTurn;
         }
         else{
