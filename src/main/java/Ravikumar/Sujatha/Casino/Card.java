@@ -16,15 +16,9 @@ public class Card {
         return rank;
     }
 
-    public void setRank(int rank) {
-        this.rank = rank;
-    }
 
     public Deck.Suit getSuit() {
         return suit;
     }
 
-    public void setSuit(Deck.Suit suit) {
-        this.suit = suit;
-    }
 }

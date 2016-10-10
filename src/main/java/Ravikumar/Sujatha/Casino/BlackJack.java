@@ -6,7 +6,9 @@ package Ravikumar.Sujatha.Casino;
 public class BlackJack {
 
     private Player blackJackPlayer, dealer;
+    double betAmount;
     boolean playerTurn = true;
+    boolean dealerTurn = true;
     Input input = new Input();
     Deck deck = new Deck();
 
@@ -14,14 +16,13 @@ public class BlackJack {
     public void playGame(Player player){
         blackJackPlayer = player;
         dealer = new Player("Dealer");
-        bet();
+        betAmount = bet();
         deal();
         Display.displayPlayerHand();
         blackJackPlayer.displayHand(blackJackPlayer);
         System.out.println();
         Display.displayDealerHand();
         dealer.displayHand(dealer);
-        //boolean playerHasBlackJack = doesPlayerHaveAnotherTurn();
         if(doesPlayerHaveAnotherTurn()){
             hitOrStand();
             Display.displayPlayerHand();
@@ -29,17 +30,40 @@ public class BlackJack {
             System.out.println();
         }
 
-
         else
-            System.out.println("Game Over");
+            findWinner();
 
     }
 
 
+    public void findWinner(){
+        double winningAmount = betAmount*2;
+        int totalPlayerHandValue = getTotalHandValue(blackJackPlayer);
+        int totalDealerHandValue = getTotalHandValue(dealer);
+        int howFarIsPlayerFrom21 = 21 - totalPlayerHandValue;
+        int howFarIsDealerFrom21 = 21 - totalDealerHandValue;
+
+        if ((howFarIsPlayerFrom21 >= 0) && (howFarIsPlayerFrom21 < howFarIsDealerFrom21)) {
+            System.out.println("\nPlayer Wins!!!");
+            blackJackPlayer.addMoneyToWallet(winningAmount);
+            blackJackPlayer.printMoneyInWallet();
+        }
+        else if ((howFarIsDealerFrom21 >= 0) && (howFarIsDealerFrom21 < howFarIsPlayerFrom21)) {
+            System.out.println("\nDealer Wins!!!");
+            blackJackPlayer.printMoneyInWallet();
+        }
+        else if ((howFarIsDealerFrom21 >= 0) && (howFarIsPlayerFrom21 >= 0) && (howFarIsDealerFrom21 == howFarIsPlayerFrom21)){
+            System.out.println("\nGame ends in a Draw...");
+            blackJackPlayer.addMoneyToWallet(betAmount);
+            blackJackPlayer.printMoneyInWallet();
+        }
+
+    }
+
 
     public void hitOrStand(){
         boolean checkIfPlayerHasAnotherTurn;
-        System.out.println("What do you wish to do?? Hit or Stand. Press H for Hit and S for Stand");
+        System.out.println("\nWhat do you wish to do?? Hit or Stand. Press H for Hit and S for Stand");
         char hitOrStandInput = input.getHitOrStand();
         switch(hitOrStandInput){
             case 'H':
@@ -53,14 +77,17 @@ public class BlackJack {
                 break;
             case 'S':
                 playerTurn = false;
+                Display.displayPlayerHand();
+                blackJackPlayer.displayHand(blackJackPlayer);
+                Display.displayDealerHand();
+                dealer.displayHand(dealer);
+                doesDealerHaveAnotherTurn();
                 break;
             default:
                 System.out.println("Enter S or H");
 
         }
     }
-
-
 
 
     public void deal(){
@@ -75,15 +102,18 @@ public class BlackJack {
     }
 
 
-    public void bet(){
+    public double bet(){
         System.out.println("How much do you want to bet?");
         double betAmount = input.getAmount();
         if (blackJackPlayer.getMoneyInWallet() >= betAmount){
             blackJackPlayer.removeMoneyFromWallet(betAmount);
+            blackJackPlayer.printMoneyInWallet();
         }
         else
             System.out.println("You do not have enough money to bet. Decrease your bet amount.");
+        return betAmount;
     }
+
 
     public int getTotalHandValue(Player player){
         int handTotal = 0;
@@ -114,12 +144,44 @@ public class BlackJack {
         else if(totalHandValue > 21) {
             playerTurn = false;
             System.out.println("Busted");
+            blackJackPlayer.printMoneyInWallet();
             return playerTurn;
         }
         else {
             hitOrStand();
             return playerTurn;
         }
+    }
+
+
+    public boolean doesDealerHaveAnotherTurn(){
+        int totalHandValue = getTotalHandValue(dealer);
+        if (totalHandValue == 21) {
+            dealerTurn = false;
+            System.out.println("\nDealer wins!!");
+            return dealerTurn;
+        }
+        else if (totalHandValue > 21) {
+            dealerTurn = false;
+            System.out.println("\nDealer Busted and Player wins..");
+            blackJackPlayer.addMoneyToWallet(betAmount+betAmount);
+            blackJackPlayer.printMoneyInWallet();
+            return dealerTurn;
+        }
+        else if(totalHandValue < 17){
+            dealerTurn = true;
+            System.out.println("\nDealer wants a HIT...");
+            dealer.addCardToHand(deck.dealCard());
+            Display.displayDealerHand();
+            dealer.displayHand(dealer);
+            doesDealerHaveAnotherTurn();
+            return dealerTurn;
+        }
+        else{
+            dealerTurn = false;
+            System.out.println("\nDealer Stands!!");
+        }
+        return dealerTurn;
     }
 
 }

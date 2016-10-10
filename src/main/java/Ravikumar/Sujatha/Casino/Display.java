@@ -18,9 +18,7 @@ public class Display {
     }
 
     public static void displayFirstRoundOfDeal(){
-        //System.out.println("******************************");
         System.out.println("First round of deal is done");
-        //System.out.println("******************************");
     }
 
     public static void displayPlayerHand(){

@@ -40,7 +40,6 @@ public class Player {
     }
 
     public void displayHand(Player playerOrDealer){
-        //if(whoseHand.equalsIgnoreCase()){
             for(Card card : playerOrDealer.hand){
                 if(card.getRank() == 11)
                     System.out.println("Ace of "+card.getSuit());
@@ -53,12 +52,14 @@ public class Player {
                 else
                     System.out.println(card.getRank()+" of "+card.getSuit());
             }
-        //}
 
     }
 
 
+    public void printMoneyInWallet(){
+        System.out.println("Money in Player's wallet after the game: "+getMoneyInWallet());
 
+    }
 
 
 

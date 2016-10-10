@@ -10,7 +10,8 @@ public class Casino {
     AsciiArt art = new AsciiArt();
 
     public void startCasino(){
-        art.displayArt();
+        art.displayAsciiArt();
+
         Display.displayWelcomeMessage();
 
         Display.displayMainMenu();
